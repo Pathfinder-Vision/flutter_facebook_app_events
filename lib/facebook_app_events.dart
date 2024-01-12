@@ -45,6 +45,11 @@ class FacebookAppEvents {
   /// This could be an EAN, article identifier, etc., depending on the nature of the app.
   static const paramNameContentId = "fb_content_id";
 
+  /// Opens Facebook Sharing Dialog
+  Future<void> shareToFacebookPost(String url) {
+    return _channel.invokeMethod<void>('shareToFacebookPost');
+  }
+
   /// Clears the current user data
   Future<void> clearUserData() {
     return _channel.invokeMethod<void>('clearUserData');
