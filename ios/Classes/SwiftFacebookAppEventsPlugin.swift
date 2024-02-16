@@ -4,7 +4,7 @@ import FBSDKCoreKit
 import FBAEMKit
 import FBSDKShareKit
 
-public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin, SharingDelegate {
+public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter.oddbit.id/facebook_app_events", binaryMessenger: registrar.messenger())
         let instance = SwiftFacebookAppEventsPlugin()
@@ -79,8 +79,8 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin, SharingDeleg
         case "setAdvertiserTracking":
             handleSetAdvertiserTracking(call, result: result)
             break
-        case "shareToFacebookPost":
-            shareToFacebookPost(call, result: result)
+        // case "shareToFacebookPost":
+        //     shareToFacebookPost(call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -193,50 +193,5 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin, SharingDeleg
         Settings.shared.isAdvertiserTrackingEnabled = enabled
         Settings.shared.isAdvertiserIDCollectionEnabled = collectId
         result(nil)
-    }
-
-    private func shareToFacebookPost(args : [String: Any?], result: @escaping FlutterResult) {
-        let arguments = call.arguments as? [String: Any] ?? [String: Any]()
-        
-        let content = ShareLinkContent()
-        content.contentURL = arguments["url"] as! String
-        let dialog = ShareDialog(
-            viewController: UIApplication.shared.windows.first!.rootViewController,
-            content: content,
-            delegate: self
-        )
-
-        do {
-            try dialog.validate()
-        } catch {
-           result(ERROR)
-        }
-
-        dialog.show()
-        result(nil)
-    }
-}
-
-extension UIApplication {
-    class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
-        if let navigationController = controller as? UINavigationController {
-            return topViewController(controller: navigationController.visibleViewController)
-        }
-        if let tabController = controller as? UITabBarController {
-            if let selected = tabController.selectedViewController {
-                return topViewController(controller: selected)
-            }
-        }
-        if let presented = controller?.presentedViewController {
-            return topViewController(controller: presented)
-        }
-        return controller
-    }
-}
-
-class TransparentViewController: UIViewController {
-    override func viewDidLoad() {
-        view.backgroundColor = UIColor.clear
-        view.isOpaque = false
     }
 }
